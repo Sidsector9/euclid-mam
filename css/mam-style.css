@@ -26,7 +26,7 @@
 	margin-bottom: .5em;
 }
 
-.euclid-avatar img:hover {
+.euclid-avatar a:hover img {
 	filter: grayscale(0);
 }
 
