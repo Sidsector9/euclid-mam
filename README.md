@@ -1,5 +1,6 @@
 Assignment-2b: WordPress-Contributors Plugin
 ===
+### You can find the link to the demo [here](http://nomnom66.dollarwp.com/demonstration-of-multi-author-metabox/)
 Below is how the metabox will appear on the post edit screen.
 
 ![Metabox](https://s24.postimg.org/s2debo0px/metabox.png)
