@@ -2,7 +2,7 @@ Assignment-2b: WordPress-Contributors Plugin
 ===
 Below is how the metabox will appear on the post edit screen.
 
-![Metabox](https://lh4.googleusercontent.com/2oHd31Vka2ApBEKTwG5_fNvkwpf96Y6-SCtTqhFkLqR9vYFXV8vviSJmrsRSj4QKhNQvNxZXREyRKTg=w1309-h681-rw)
+![Metabox](https://lh6.googleusercontent.com/eAK1wwJvMbV00D4h74az_LOeujYNM43nswPXMmCvUnMLPutrsYNvNyy1yf5FjW8_KEV1U7x3emkitZ4=w1309-h681-rw)
 
 This metabox will be only visible to users with roles:
 * administrator
