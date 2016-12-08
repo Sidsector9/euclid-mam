@@ -26,8 +26,8 @@
 	margin-bottom: .5em;
 }
 
-.euclid-avatar a:hover img {
-	filter: grayscale(0);
+.wrap > a:hover img {
+    filter: grayscale(0);
 }
 
 @media (min-width: 480px) {
