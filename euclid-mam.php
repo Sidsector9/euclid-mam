@@ -169,8 +169,8 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		                $content .= '<span class="euclid-author-name">' . get_the_author_meta( 'display_name', $author_id ) . '</span>';
 		                $content .= '</div></a>';
 		            }
+		            $content .= '</div></div>';
 		        }
-		        $content .= '</div></div>';
 		    }
 		    return $content;
 		}
