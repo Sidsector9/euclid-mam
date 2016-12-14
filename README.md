@@ -1,7 +1,12 @@
 Assignment-2b: WordPress-Contributors Plugin
 ===
 ### You can find the link to the demo [here](http://nomnom66.dollarwp.com/demonstration-of-multi-author-metabox/)
-Below is how the metabox will appear on the post edit screen.
+Below is how the metabox **v2** will appear on the post edit screen.
+
+### Changes
+* User list format modified to `First_Name Last_Name ( user_nicename )`.
+* Checkbox will be `checked` and `disabled` for the post author.
+* If *First Name* and *Last Name* fields are empty then the `user_nicename` will be displayed. *(eg: First Option)*
 
 ![Metabox](https://s27.postimg.org/s3yot8ug3/mamv21.jpg)
 
