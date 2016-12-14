@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Multi Author Metabox
- * Plugin URI:
+ * Plugin URI: https://github.com/Sidsector9/euclid-mam/tree/euclid-mam-v2
  * Description: A simple plugin to add contributors to a post.
  * Version: 2
  * Author: T. Siddharth Unni
