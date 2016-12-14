@@ -1,8 +1,14 @@
 <?php
 /**
  * Plugin Name: Multi Author Metabox
+ * Plugin URI:
+ * Description: A simple plugin to add contributors to a post.
+ * Version: 2
+ * Author: T. Siddharth Unni
+ * Author URI: https://github.com/Sidsector9/
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: mam
  *
  * @package WordPress
  */
@@ -89,29 +95,47 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		public function euclid_fill_metabox( $post ) {
 			wp_nonce_field( basename( __FILE__ ), 'mam_nonce' );
 		    $postmeta = get_post_meta( $post->ID, 'contributors', true );
-		    $contributors = get_users( array( 'fields' => array( 'ID', 'display_name' ) ) );
+		    $contributors = get_users();
+            $post_author_id = get_post_field( 'post_author', $post->ID );
 
 		    foreach ( $contributors as $user ) {
-
-		        if ( is_array( $postmeta ) && in_array( $user->ID, $postmeta, true ) ) {
-		            $checked = 'checked="checked"';
-		        } else {
-		            $checked = null;
-		        }
+		    	$checked = null;
+	            $disabled = 'null';
+		    	if( $user->has_cap('edit_posts') ) {
+			        if ( is_array( $postmeta ) && in_array( $user->data->ID, $postmeta, true ) ) {
+			            $checked = 'checked="checked"';
+			        } 
+			        if ( $post_author_id === $user->data->ID ) {
+			        	$checked = 'checked="checked"';
+			        	$disabled = 'disabled';
+			        }
 		        ?>
 
-		        <p>
-		            <input  
-		                type="checkbox" 
-		                name="contributors[]" 
-		                value="<?php echo intval( $user->ID );?>" 
-		                <?php echo esc_html( $checked ); ?>
-		            >
-		            <?php echo esc_html( $user->display_name );?>
-		        </p>
+			        <p>
+			            <input  
+			                type="checkbox" 
+			                name="contributors[]" 
+			                value="<?php echo intval( $user->data->ID );?>" 
+			                <?php echo esc_html( $checked ); ?>
+			                <?php echo esc_html( $disabled ); ?>
+			            >
+			            <?php  
+			            	$user_data = get_userdata( $user->data->ID );
+			            	$fn = $user_data->first_name;
+			            	$ln = $user_data->last_name;
 
-		        <?php
-		    }
+			            	if( empty( $fn ) && empty( $ln ) )
+			            		echo esc_html( $user->data->user_nicename );
+			            	else {
+			            		echo esc_html( $fn . ' ' . $ln . '  ' );
+			            		echo '<span style="color: #aaa;">( ' . $user->data->user_nicename . ' )</span>';
+			            	}
+			            ?>
+			        </p>
+
+			        <?php
+			    }
+			}
 		}
 
 
