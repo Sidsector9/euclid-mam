@@ -96,11 +96,11 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 			wp_nonce_field( basename( __FILE__ ), 'mam_nonce' );
 		    $postmeta = get_post_meta( $post->ID, 'contributors', true );
 		    $contributors = get_users();
-            $post_author_id = get_post_field( 'post_author', $post->ID );
+		    $post_author_id = get_post_field( 'post_author', $post->ID );
 
 		    foreach ( $contributors as $user ) {
 		    	$checked = null;
-	            $disabled = 'null';
+		    	$disabled = 'null';
 		    	if( $user->has_cap('edit_posts') ) {
 			        if ( is_array( $postmeta ) && in_array( $user->data->ID, $postmeta, true ) ) {
 			            $checked = 'checked="checked"';
