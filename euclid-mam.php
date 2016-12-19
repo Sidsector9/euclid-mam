@@ -11,6 +11,8 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: mam
 */
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 
 	/**
