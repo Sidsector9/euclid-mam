@@ -35,8 +35,11 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		public function __construct() {
 			add_action( 'admin_init', array( $this, 'euclid_check_user_role' ) );
 			add_action( 'save_post', array( $this, 'euclid_save_post' ) );
-			add_filter( 'the_content', array( $this, 'euclid_display_contributors' ) );
-			add_action( 'wp_enqueue_scripts', array( $this, 'euclid_enqueue_css' ) );
+
+			if( ! is_admin() ) {
+				add_filter( 'the_content', array( $this, 'euclid_display_contributors' ) );
+				add_action( 'wp_enqueue_scripts', array( $this, 'euclid_enqueue_css' ) );
+			}
 		}
 
 
