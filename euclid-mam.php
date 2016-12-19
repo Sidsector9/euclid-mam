@@ -128,7 +128,7 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 			            		echo esc_html( $user->data->user_nicename );
 			            	else {
 			            		echo esc_html( $fn . ' ' . $ln . '  ' );
-			            		echo '<span style="color: #aaa;">( ' . $user->data->user_nicename . ' )</span>';
+			            		echo '<span style="color: #aaa;">( ' . esc_html( $user->data->user_nicename ) . ' )</span>';
 			            	}
 			            ?>
 			        </p>
