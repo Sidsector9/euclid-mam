@@ -1,17 +1,15 @@
 <?php
-/**
- * Plugin Name: Multi Author Metabox
- * Plugin URI: https://github.com/Sidsector9/euclid-mam/tree/euclid-mam-v2
- * Description: A simple plugin to add contributors to a post.
- * Version: 2
- * Author: T. Siddharth Unni
- * Author URI: https://github.com/Sidsector9/
- * License: GPLv2 or later
- * License URI: http://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: mam
- *
- * @package WordPress
- */
+/*
+Plugin Name: Multi Author Metabox
+Plugin URI:  https://github.com/Sidsector9/euclid-mam/tree/euclid-mam-v2
+Description: A simple plugin to add contributors to a post.
+Version:     2.0
+Author:      T. Siddharth Unni
+Author URI:  https://github.com/Sidsector9/
+License:     GPL2
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: mam
+*/
 
 if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 
