@@ -85,11 +85,11 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		/**
 		 * Fill metabox with list of users with checkboxes.
 		 *
-		 * This function will add a list of all users of all roles
-		 * to the metabox that was created using the euclid_check_user_role()
-		 * function.
+		 * This function will add a list of all users with capability
+		 * of 'edit_posts' to the metabox that was created using the 
+		 * euclid_check_user_role() function.
 		 *
-		 * @param Object $post This is the post object that containes
+		 * @param Object $post This is the post object that contains
 		 * data of the current post.
 		 */
 		public function euclid_fill_metabox( $post ) {
@@ -100,7 +100,7 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 
 		    foreach ( $contributors as $user ) {
 		    	$checked = null;
-		    	$disabled = 'null';
+		    	$disabled = null;
 		    	if( $user->has_cap('edit_posts') ) {
 			        if ( is_array( $postmeta ) && in_array( $user->data->ID, $postmeta, true ) ) {
 			            $checked = 'checked="checked"';
