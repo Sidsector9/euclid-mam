@@ -72,14 +72,14 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 			);
 
 			if ( in_array( $current_user->roles[0], $user_roles, true ) ) {
-		        add_meta_box(
-		            'euclid-multi-author',
-		            esc_html__( 'Contributors', 'mam' ),
-		            array( $this, 'euclid_fill_metabox' ),
-		            'post',
-		            'normal'
-		        );
-		    }
+				add_meta_box(
+					'euclid-multi-author',
+					esc_html__( 'Contributors', 'mam' ),
+					array( $this, 'euclid_fill_metabox' ),
+					'post',
+					'normal'
+				);
+			}
 		}
 
 		/**
@@ -94,34 +94,34 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		 */
 		public function euclid_fill_metabox( $post ) {
 			wp_nonce_field( basename( __FILE__ ), 'mam_nonce' );
-		    $postmeta = get_post_meta( $post->ID, 'contributors', true );
-		    $contributors = get_users();
-		    $post_author_id = get_post_field( 'post_author', $post->ID );
+			$postmeta = get_post_meta( $post->ID, 'contributors', true );
+			$contributors = get_users();
+			$post_author_id = get_post_field( 'post_author', $post->ID );
 
-		    foreach ( $contributors as $user ) {
-		    	$checked  = null;
-		    	$disabled = null;
+			foreach ( $contributors as $user ) {
+				$checked  = null;
+				$disabled = null;
 
-		    	if ( $user->has_cap( 'edit_posts' ) ) {
-			        if ( is_array( $postmeta ) && in_array( $user->data->ID, $postmeta, true ) ) {
-			            $checked = 'checked="checked"';
-			        }
+				if ( $user->has_cap( 'edit_posts' ) ) {
+					if ( is_array( $postmeta ) && in_array( $user->data->ID, $postmeta, true ) ) {
+						$checked = 'checked="checked"';
+					}
 
-			        if ( $post_author_id === $user->data->ID ) {
-			        	$checked  = 'checked="checked"';
-			        	$disabled = 'disabled';
-			        }
-		        ?>
+					if ( $post_author_id === $user->data->ID ) {
+						$checked  = 'checked="checked"';
+						$disabled = 'disabled';
+					}
+				?>
 
-			        <p>
-			            <input  
-			                type="checkbox" 
-			                name="contributors[]" 
-			                value="<?php echo intval( $user->data->ID );?>" 
-			                <?php echo esc_attr( $checked ); ?>
-			                <?php echo esc_attr( $disabled ); ?>
-			            >
-			            <?php
+					<p>
+						<input  
+							type="checkbox" 
+							name="contributors[]" 
+							value="<?php echo intval( $user->data->ID );?>" 
+							<?php echo esc_attr( $checked ); ?>
+							<?php echo esc_attr( $disabled ); ?>
+						>
+						<?php
 						$user_data = get_userdata( $user->data->ID );
 						$fn        = $user_data->first_name;
 						$ln        = $user_data->last_name;
