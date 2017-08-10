@@ -64,6 +64,7 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		 */
 		public function euclid_check_user_role() {
 			global $current_user;
+
 			$user_roles = array(
 				'administrator',
 				'editor',
@@ -175,25 +176,25 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		public function euclid_display_contributors( $content ) {
 			if ( is_singular( 'post' ) ) {
 
-		        $postmeta = get_post_meta( get_the_ID(), 'contributors', true );
+				$postmeta = get_post_meta( get_the_ID(), 'contributors', true );
 
-		        if ( ! empty( $postmeta ) ) {
-		            $content .= '<div class="euclid-multi-author-metabox">';
-		            $content .= '<h3>' . esc_html__( 'Contributors: ', 'mam' ) . '</h3>';
-		            $content .= '<div class="wrap">';
+				if ( ! empty( $postmeta ) ) {
+					$content .= '<div class="euclid-multi-author-metabox">';
+					$content .= '<h3>' . esc_html__( 'Contributors: ', 'mam' ) . '</h3>';
+					$content .= '<div class="wrap">';
 
-		            foreach ( $postmeta as $author_id ) {
-		                $link     = get_author_posts_url( $author_id );
-		                $content .= '<a href="' . esc_url( $link ) . '">';
-		                $content .= '<div class="euclid-contributor">';
-		                $content .= '<div class="euclid-avatar">' . get_avatar( $author_id ) . '</div>';
-		                $content .= '<span class="euclid-author-name">' . get_the_author_meta( 'display_name', $author_id ) . '</span>';
-		                $content .= '</div></a>';
-		            }
-		            $content .= '</div></div>';
-		        }
-		    }
-		    return $content;
+					foreach ( $postmeta as $author_id ) {
+						$link     = get_author_posts_url( $author_id );
+						$content .= '<a href="' . esc_url( $link ) . '">';
+						$content .= '<div class="euclid-contributor">';
+						$content .= '<div class="euclid-avatar">' . get_avatar( $author_id ) . '</div>';
+						$content .= '<span class="euclid-author-name">' . get_the_author_meta( 'display_name', $author_id ) . '</span>';
+						$content .= '</div></a>';
+					}
+					$content .= '</div></div>';
+				}
+			}
+			return $content;
 		}
 	}
 }
