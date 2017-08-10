@@ -1,11 +1,21 @@
 <?php
 /**
  * Plugin Name: Multi Author Metabox
- * License: GPLv2 or later
- * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * Plugin URI:  https://github.com/Sidsector9/euclid-mam/
+ * Description: A simple plugin to add contributors to a post.
+ * Version:     2.0
+ * Author:      T. Siddharth Unni
+ * Author URI:  https://github.com/Sidsector9/
+ * License:     GPL2
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: mam
  *
- * @package WordPress
+ * @package euclid
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 
@@ -17,8 +27,6 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 	 */
 	class MultiAuthorMetabox {
 
-
-
 		/**
 		 * Constructor function.
 		 *
@@ -29,11 +37,12 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		public function __construct() {
 			add_action( 'admin_init', array( $this, 'euclid_check_user_role' ) );
 			add_action( 'save_post', array( $this, 'euclid_save_post' ) );
-			add_filter( 'the_content', array( $this, 'euclid_display_contributors' ) );
-			add_action( 'wp_enqueue_scripts', array( $this, 'euclid_enqueue_css' ) );
+
+			if ( ! is_admin() ) {
+				add_filter( 'the_content', array( $this, 'euclid_display_contributors' ) );
+				add_action( 'wp_enqueue_scripts', array( $this, 'euclid_enqueue_css' ) );
+			}
 		}
-
-
 
 		/**
 		 * Enqueue the stylesheet
@@ -41,8 +50,6 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		function euclid_enqueue_css() {
 			wp_enqueue_style( 'mam-style', plugins_url( '/css/mam-style.css', __FILE__ ) );
 		}
-
-
 
 		/**
 		 * Checks user role and then create metabox
@@ -58,15 +65,15 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		public function euclid_check_user_role() {
 			global $current_user;
 			$user_roles = array(
-							'administrator',
-							'editor',
-							'author',
-						);
+				'administrator',
+				'editor',
+				'author',
+			);
 
 			if ( in_array( $current_user->roles[0], $user_roles, true ) ) {
 		        add_meta_box(
 		            'euclid-multi-author',
-		            'Contributors',
+		            esc_html__( 'Contributors', 'mam' ),
 		            array( $this, 'euclid_fill_metabox' ),
 		            'post',
 		            'normal'
@@ -74,47 +81,61 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		    }
 		}
 
-
-
 		/**
 		 * Fill metabox with list of users with checkboxes.
 		 *
-		 * This function will add a list of all users of all roles
-		 * to the metabox that was created using the euclid_check_user_role()
-		 * function.
+		 * This function will add a list of all users with capability
+		 * of 'edit_posts' to the metabox that was created using the
+		 * euclid_check_user_role() function.
 		 *
-		 * @param Object $post This is the post object that containes
+		 * @param Object $post This is the post object that contains
 		 * data of the current post.
 		 */
 		public function euclid_fill_metabox( $post ) {
 			wp_nonce_field( basename( __FILE__ ), 'mam_nonce' );
 		    $postmeta = get_post_meta( $post->ID, 'contributors', true );
-		    $contributors = get_users( array( 'fields' => array( 'ID', 'display_name' ) ) );
+		    $contributors = get_users();
+		    $post_author_id = get_post_field( 'post_author', $post->ID );
 
 		    foreach ( $contributors as $user ) {
+		    	$checked  = null;
+		    	$disabled = null;
 
-		        if ( is_array( $postmeta ) && in_array( $user->ID, $postmeta, true ) ) {
-		            $checked = 'checked="checked"';
-		        } else {
-		            $checked = null;
-		        }
+		    	if ( $user->has_cap( 'edit_posts' ) ) {
+			        if ( is_array( $postmeta ) && in_array( $user->data->ID, $postmeta, true ) ) {
+			            $checked = 'checked="checked"';
+			        }
+
+			        if ( $post_author_id === $user->data->ID ) {
+			        	$checked  = 'checked="checked"';
+			        	$disabled = 'disabled';
+			        }
 		        ?>
 
-		        <p>
-		            <input  
-		                type="checkbox" 
-		                name="contributors[]" 
-		                value="<?php echo intval( $user->ID );?>" 
-		                <?php echo esc_html( $checked ); ?>
-		            >
-		            <?php echo esc_html( $user->display_name );?>
-		        </p>
+			        <p>
+			            <input  
+			                type="checkbox" 
+			                name="contributors[]" 
+			                value="<?php echo intval( $user->data->ID );?>" 
+			                <?php echo esc_attr( $checked ); ?>
+			                <?php echo esc_attr( $disabled ); ?>
+			            >
+			            <?php
+						$user_data = get_userdata( $user->data->ID );
+						$fn        = $user_data->first_name;
+						$ln        = $user_data->last_name;
 
-		        <?php
-		    }
+						if ( empty( $fn ) && empty( $ln ) ) {
+							echo esc_html( $user->data->user_nicename );
+						} else {
+							echo esc_html( $fn . ' ' . $ln . '  ' );
+							echo '<span style="color: #aaa;">( ' . esc_html( $user->data->user_nicename ) . ' )</span>';
+						} ?>
+			        </p>
+			        <?php
+			    }
+			}
 		}
-
-
 
 		/**
 		 * Save the selected contributors.
@@ -127,20 +148,20 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 		public function euclid_save_post( $post_id ) {
 			$is_autosave = wp_is_post_autosave( $post_id );
 		    $is_revision = wp_is_post_revision( $post_id );
-		    $is_valid_nonce = ( isset( $_POST['mam_nonce'] ) && wp_verify_nonce( $_POST['mam_nonce'], basename( __FILE__ ) ) ) ? 'true' : 'false'; // WPCS: input var okay; Sanitization okay.
+		    $is_valid_nonce = filter_input( INPUT_POST, 'mam_nonce', FILTER_SANITIZE_STRING );
 
 		    if ( $is_autosave || $is_revision || ! $is_valid_nonce ) {
 		        return;
 		    }
 
-		    if ( ! empty( $_POST['contributors'] ) ) { // WPCS: input var okay.
-		        update_post_meta( $post_id, 'contributors', $_POST['contributors'] ); // WPCS: input var okay; Sanitization okay.
+		    $contributors = filter_input( INPUT_POST, 'contributors', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+
+		    if ( ! empty( $contributors ) ) {
+		        update_post_meta( $post_id, 'contributors', $contributors );
 		    } else {
 		        delete_post_meta( $post_id, 'contributors' );
 		    }
 		}
-
-
 
 		/**
 		 * Displays the contributors on post page.
@@ -158,12 +179,12 @@ if ( ! class_exists( 'MultiAuthorMetabox' ) ) {
 
 		        if ( ! empty( $postmeta ) ) {
 		            $content .= '<div class="euclid-multi-author-metabox">';
-		            $content .= '<h3>Contributors: </h3>';
+		            $content .= '<h3>' . esc_html__( 'Contributors: ', 'mam' ) . '</h3>';
 		            $content .= '<div class="wrap">';
 
 		            foreach ( $postmeta as $author_id ) {
 		                $link     = get_author_posts_url( $author_id );
-		                $content .= '<a href="' . $link . '">';
+		                $content .= '<a href="' . esc_url( $link ) . '">';
 		                $content .= '<div class="euclid-contributor">';
 		                $content .= '<div class="euclid-avatar">' . get_avatar( $author_id ) . '</div>';
 		                $content .= '<span class="euclid-author-name">' . get_the_author_meta( 'display_name', $author_id ) . '</span>';
